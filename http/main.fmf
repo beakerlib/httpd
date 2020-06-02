@@ -1,0 +1,11 @@
+summary: Basic library for httpd testing
+contact: Ondřej Pták <optak@redhat.com>
+component:
+- httpd
+test: ./runtest.sh
+require:
+- httpd
+- mod_ssl
+- lsof
+- library(openssl/certgen)
+duration: 5m
