@@ -672,7 +672,7 @@ httpRestoreMod() {
 }
 
 httpSetMPM() {
-    if [[ $# = 0 ]]; then
+    if [[ $# -eq 0 ]]; then
         rlLogError "No Multi-Processing Module specified"
         return 1
     fi
