@@ -211,6 +211,12 @@ by downloading https://SERVER_HOSTNAME/http_tesfile.
 Function try to download from port 443 first and if that fails,
 try also port 8443 (defauld in mod_nss).
 
+=head2 httpSetMPM <worker|prefork|event>
+
+Set Multi-Processing Module.<<BR>>
+Some tests require specific MPM to be set. Since rhel-8, default MPM changed
+from prefork to event based. Don't forget to switch MPM back in cleanup phase.
+
 =head2 httpInstallCa
 
 Install certificate downloaded from server_url/ca.crt into local file with trusted ca's.
@@ -661,6 +667,25 @@ httpRestoreMod() {
             fi
         done
     done
+
+    return $ret
+}
+
+httpSetMPM() {
+    if [[ $# = 0 ]]; then
+        rlLogError "No Multi-Processing Module specified"
+        return 1
+    fi
+    ret=0
+    module=$1
+    mpmconf=${httpCONFDIR}/conf.modules.d/00-mpm.conf
+
+    # disable all modules
+    sed -i 's/^LoadModule/#LoadModule/' $mpmconf || ret=1
+    # enable chosen one
+    sed -i "s/#LoadModule mpm_${module}/LoadModule mpm_${module}/" $mpmconf || ret=1
+
+    [[ $ret -eq 0 ]] && rlLogInfo "MPM module has been set to $module."
 
     return $ret
 }
