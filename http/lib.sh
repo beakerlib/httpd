@@ -45,11 +45,11 @@ When using ssl, library allow only one of {mod_ssl,mod_nss} to be active.
 When not using ssl, both modules mod_ssl and mod_nss will be disabled
 because of posible problems with certificates.
 Deactivating of module is implement by renaming *.conf files
-in httpStart or httpsStart function and
-restore them in httpStop or httpsStop function.
+in httpStart or httpSecureStart function and
+restore them in httpStop or httpSecureStop function.
 
 When using mod_nss for ssl, there is implicit port 8443 in nss.conf,
-so httpsStatus try both ports 443 and 8443 and fails only when neither
+so httpSecureStatus try both ports 443 and 8443 and fails only when neither
 of them is working.
 
 Library makes sure that no httpd server is running
@@ -109,12 +109,12 @@ Default value is server's hostname.
 =item httpSSL_CRT
 
 Path to server certificate (.crt).
-Function httpsStart will copy a certificate into this location.
+Function httpSecureStart will copy a certificate into this location.
 
 =item httpSSL_KEY
 
 Path to private key to server certificate (.key).
-Function httpsStart will copy a private key into this location.
+Function httpSecureStart will copy a private key into this location.
 
 =item httpSSL_PEM
 
@@ -183,13 +183,13 @@ by downloading http://SERVER_HOSTNAME/http_tesfile.
 
 Returns 0 when http_testfile is successfully downloaded, 1 otherwise.
 
-=head2 httpsStart
+=head2 httpSecureStart
 
 This function creates ssl ceertificates and then
 starts https server and create file $httpROOTDIR/http_testfile
 containging 'ok' string.
 
-    httpsStart <mod_nss|nss>
+    httpSecureStart <mod_nss|nss>
 
 =over
 
@@ -198,13 +198,13 @@ containging 'ok' string.
 Use mod_nss instead of default mod_ssl.
 
 
-=head2 httpsStop
+=head2 httpSecureStop
 
 Stop http server and delete file $httpROOTDIR/http_testfile.
-Also restore ssl certificate to state before httpsStart
+Also restore ssl certificate to state before httpSecureStart
 was executed.
 
-=head2 httpsStatus
+=head2 httpSecureStatus
 
 Check whether https server is running
 by downloading https://SERVER_HOSTNAME/http_tesfile.
@@ -432,8 +432,13 @@ httpStatus() {
 
 
 httpsStart() {
+    rlLogInfo "httpsStart function is deprecated. Use httpSecureStart instead."
+    httpSecureStart $1
+}
+
+httpSecureStart() {
     # select one of mod_{ssl,nss} and disable conf files
-    #   if there are both of them, so only one mod will be active.
+    # if there are both of them, so only one mod will be active.
 
     __httpKillAllApaches
     local httpMOD="none"
@@ -565,8 +570,12 @@ httpsStart() {
     return $ret
 }
 
-
 httpsStop() {
+    rlLogInfo "httpsStop function is deprecated. Use httpSecureStop instead."
+    httpSecureStop
+}
+
+httpSecureStop() {
     rlRun "rlServiceStop $httpHTTPD" 0 "stoping httpd service"
     rlRun "httpRestoreMod ssl nss" 0 "Restoring mod_ssl and mod_nss"
 
@@ -583,6 +592,11 @@ httpsStop() {
 }
 
 httpsStatus() {
+    rlLogInfo "httpsStatus function is deprecated. Use httpSecureStatus instead."
+    httpSecureStatus
+}
+
+httpSecureStatus() {
     # try to download a testfile from running server
     local tmpdir
     local ret=0

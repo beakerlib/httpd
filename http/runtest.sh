@@ -27,7 +27,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Include Beaker environment
-[ -e /usr/bin/rhts-environment.sh ] && . /usr/bin/rhts-environment.sh
+. /usr/bin/rhts-environment.sh || exit 1
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 
 PACKAGES="httpd"
@@ -56,11 +56,11 @@ rlJournalStart
         then
             # run only if there is some mod for ssl
             rlPhaseStartTest "Test https"
-                rlRun "httpsStart" 0 "starting https server"
+                rlRun "httpSecureStart" 0 "starting https server"
                 rlRun "httpInstallCa `hostname`" 0 "installing ca"
-                rlRun "httpsStatus" 0 "httpStatus"
+                rlRun "httpSecureStatus" 0 "httpStatus"
                 rlRun "httpRemoveCa" 0 "removing ca"
-                rlRun "httpsStop" 0 "stoping https server"
+                rlRun "httpSecureStop" 0 "stoping https server"
             rlPhaseEnd
         fi
         if ( [ $httpCOLLECTION -eq 0 ] &&\
@@ -70,12 +70,12 @@ rlJournalStart
         then
             # test explicitly mod_nss when both mod_{ssl,nss} are installed
             rlPhaseStartTest "Test https with mod_nss"
-                rlRun "httpsStart mod_nss" 0\
+                rlRun "httpSecureStart mod_nss" 0\
                     "starting https server with mod_nss explicitly"
                 rlRun "httpInstallCa `hostname`" 0 "installing ca"
-                rlRun "httpsStatus" 0 "httpStatus"
+                rlRun "httpSecureStatus" 0 "httpStatus"
                 rlRun "httpRemoveCa" 0 "removing ca"
-                rlRun "httpsStop" 0 "stoping https server"
+                rlRun "httpSecureStop" 0 "stoping https server"
             rlPhaseEnd
         fi
 
