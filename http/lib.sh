@@ -150,7 +150,11 @@ httpNSS_DBDIR=${httpNSS_DBDIR:-/etc/httpd/alias}
 httpHTTPD=${httpHTTPD:-httpd}
 httpSSL_CRT=${httpSSL_CRT:-/etc/pki/tls/certs/localhost.crt}
 httpSSL_KEY=${httpSSL_KEY:-/etc/pki/tls/private/localhost.key}
-httpSSL_PEM=${httpSSL_PEM:-/etc/pki/tls/cert.pem}
+if rlIsRHEL '>=10'; then
+    httpSSL_PEM=${httpSSL_PEM:-/etc/ssl/cert.pem}
+else
+    httpSSL_PEM=${httpSSL_PEM:-/etc/pki/tls/cert.pem}
+fi
 httpSSL_O=${httpSSL_O:-`hostname`}
 httpSSL_CN=${httpSSL_CN:-`hostname`}
 httpLOGDIR=${httpLOGDIR:-/var/log/httpd}
