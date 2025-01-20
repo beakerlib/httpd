@@ -8,4 +8,5 @@ require:
 - mod_ssl
 - lsof
 - library(openssl/certgen)
+- wget
 duration: 5m
