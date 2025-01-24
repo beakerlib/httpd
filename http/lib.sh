@@ -187,6 +187,10 @@ by downloading http://SERVER_HOSTNAME/http_tesfile.
 
 Returns 0 when http_testfile is successfully downloaded, 1 otherwise.
 
+=head2 httpRestart
+
+Restart the httpd service, failing if it is not already running.
+
 =head2 httpSecureStart
 
 This function creates ssl ceertificates and then
@@ -404,6 +408,22 @@ httpStart() {
     if [ "$ret" = 1 ];then
         __httpDetectProblems
     fi
+    return $ret
+}
+
+httpRestart() {
+    local ret=0
+
+    # Restart server, fail if it is not already running.
+    if rlIsRHEL '<7'; then
+        rlRun "service $httpHTTPD restart" 0 "Restarting httpd service" || ret=1
+    else
+        rlRun "systemctl -q is-active $httpHTTPD" 0 "Check $httpHTTPD service is running" || ret=2
+        if [ $ret -eq 0 ]; then
+            rlRun "systemctl restart $httpHTTPD" 0 "Restarting $httpHTTPD service" || ret=3
+        fi
+    fi
+
     return $ret
 }
 

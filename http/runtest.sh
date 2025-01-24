@@ -46,6 +46,7 @@ rlJournalStart
         rlPhaseStartTest "Test http"
             rlRun "httpStart" 0 "starting http server"
             rlRun "httpStatus" 0 "httpStatus"
+            rlRun "httpRestart" 0 "httpRestart"
             rlRun "httpStop" 0 "stoping http server"
         rlPhaseEnd
 
@@ -59,6 +60,7 @@ rlJournalStart
                 rlRun "httpSecureStart" 0 "starting https server"
                 rlRun "httpInstallCa `hostname`" 0 "installing ca"
                 rlRun "httpSecureStatus" 0 "httpStatus"
+                rlRun "httpRestart" 0 "httpRestart"
                 rlRun "httpRemoveCa" 0 "removing ca"
                 rlRun "httpSecureStop" 0 "stoping https server"
             rlPhaseEnd
@@ -74,6 +76,7 @@ rlJournalStart
                     "starting https server with mod_nss explicitly"
                 rlRun "httpInstallCa `hostname`" 0 "installing ca"
                 rlRun "httpSecureStatus" 0 "httpStatus"
+                rlRun "httpRestart" 0 "httpRestart"
                 rlRun "httpRemoveCa" 0 "removing ca"
                 rlRun "httpSecureStop" 0 "stoping https server"
             rlPhaseEnd
