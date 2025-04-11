@@ -119,7 +119,7 @@ Function httpSecureStart will copy a private key into this location.
 =item httpSSL_PEM
 
 Path to pem file with trusted certificates.
-Default value is /etc/pki/tls/certs/ca-bundle.crt.
+Default value is /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem.
 Certificate is available at http://SERVER_HOSTNAME/ca.crt
 and function !httpInstallCa can download and install it into httpSSL_PEM. 
 
@@ -150,11 +150,7 @@ httpNSS_DBDIR=${httpNSS_DBDIR:-/etc/httpd/alias}
 httpHTTPD=${httpHTTPD:-httpd}
 httpSSL_CRT=${httpSSL_CRT:-/etc/pki/tls/certs/localhost.crt}
 httpSSL_KEY=${httpSSL_KEY:-/etc/pki/tls/private/localhost.key}
-if rlIsRHEL '>=10'; then
-    httpSSL_PEM=${httpSSL_PEM:-/etc/ssl/cert.pem}
-else
-    httpSSL_PEM=${httpSSL_PEM:-/etc/pki/tls/cert.pem}
-fi
+httpSSL_PEM=${httpSSL_PEM:-/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem}
 httpSSL_O=${httpSSL_O:-`hostname`}
 httpSSL_CN=${httpSSL_CN:-`hostname`}
 httpLOGDIR=${httpLOGDIR:-/var/log/httpd}
